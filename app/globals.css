@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: 'Anton', sans-serif;
+  --font-body: 'Nunito', sans-serif;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+/* Signature element: a torn brush-stroke ribbon, echoing the banner's
+   red paint-stroke labels. Used for badges/section tags across the site. */
+.ribbon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 1rem;
+  color: white;
+  font-family: var(--font-display);
+  letter-spacing: 0.03em;
+  clip-path: polygon(
+    2% 15%, 20% 5%, 45% 12%, 68% 2%, 90% 10%, 100% 30%,
+    97% 70%, 100% 95%, 75% 88%, 50% 98%, 25% 90%, 0% 100%, 3% 55%
+  );
+  background: linear-gradient(135deg, #C41E1E 0%, #8B1414 100%);
+}
+
+.ribbon-gold {
+  background: linear-gradient(135deg, #FCC419 0%, #F0A500 100%);
+  color: #3B2417;
+}
+
+/* Frost / steam divider, echoing "FROZEN FOOD ❄ COFFEE" from the banner */
+.frost-steam-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: #8B1414;
+  font-weight: 800;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.frost-steam-divider::before,
+.frost-steam-divider::after {
+  content: '';
+  height: 2px;
+  width: 40px;
+  background: linear-gradient(90deg, transparent, #F0A500, transparent);
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-full bg-brandRed px-6 py-3 font-display text-white tracking-wide shadow-card transition hover:bg-brandRedDark active:scale-95;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center gap-2 rounded-full border-2 border-brandRed px-6 py-3 font-display text-brandRed tracking-wide transition hover:bg-brandRed hover:text-white active:scale-95;
+}
+
+.input-field {
+  @apply w-full rounded-xl border border-brandBrown/20 bg-white px-4 py-2.5 text-brandBrown placeholder:text-brandBrown/40 focus:border-brandRed focus:outline-none focus:ring-2 focus:ring-brandRed/20;
+}
+
+.card {
+  @apply rounded-2xl bg-white shadow-card;
+}

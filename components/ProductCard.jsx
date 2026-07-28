@@ -42,7 +42,7 @@ export default function ProductCard({ product, categoryName }) {
         <p className="mt-1 font-display text-xl text-brandRed">{formatIDR(product.price)}</p>
 
         <a
-          href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}?text=${waMessage}`}
+          href={`https://wa.me/?text=${waMessage}`}
           target="_blank"
           rel="noopener noreferrer"
           className="btn-primary mt-3 !py-2 text-sm"

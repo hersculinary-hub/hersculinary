@@ -6,6 +6,8 @@ import { listCategories } from '@/lib/categories';
 import { listProducts } from '@/lib/products';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
 
 export default async function HomePage() {
   const [categories, products] = await Promise.all([listCategories(), listProducts()]);

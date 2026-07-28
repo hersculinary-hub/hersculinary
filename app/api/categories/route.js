@@ -2,9 +2,13 @@ import { NextResponse } from 'next/server';
 import { listCategories, createCategory } from '@/lib/categories';
 import { requireApiSession } from '@/lib/auth-server';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
+
 export async function GET() {
   const categories = await listCategories();
-  return NextResponse.json({ categories });
+  return NextResponse.json({ categories }, { headers: { 'Cache-Control': 'no-store' } });
 }
 
 export async function POST(request) {

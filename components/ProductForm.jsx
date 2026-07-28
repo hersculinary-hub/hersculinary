@@ -21,6 +21,10 @@ export default function ProductForm({ initialProduct }) {
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
 
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState('');
+  const [showUrlField, setShowUrlField] = useState(false);
+
   useEffect(() => {
     fetch('/api/categories')
       .then((r) => r.json())
@@ -31,6 +35,31 @@ export default function ProductForm({ initialProduct }) {
 
   function update(field, value) {
     setForm((f) => ({ ...f, [field]: value }));
+  }
+
+  async function handleFileChange(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadError('');
+    setUploading(true);
+
+    const body = new FormData();
+    body.append('file', file);
+
+    try {
+      const res = await fetch('/api/upload', { method: 'POST', body });
+      const data = await res.json();
+      if (!res.ok) {
+        setUploadError(data.error || 'Gagal mengunggah foto.');
+        setUploading(false);
+        return;
+      }
+      update('imageUrl', data.url);
+      setUploading(false);
+    } catch {
+      setUploadError('Terjadi kesalahan jaringan saat mengunggah foto.');
+      setUploading(false);
+    }
   }
 
   async function handleSubmit(e) {
@@ -147,19 +176,53 @@ export default function ProductForm({ initialProduct }) {
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-bold text-brandBrown">URL Gambar Produk</label>
-        <input
-          className="input-field"
-          placeholder="https://..."
-          value={form.imageUrl}
-          onChange={(e) => update('imageUrl', e.target.value)}
-        />
-        <p className="mt-1 text-xs text-brandBrown/50">
-          Unggah foto ke layanan seperti Imgur/Google Drive (link publik), lalu tempel URL-nya di sini.
-        </p>
-        {form.imageUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={form.imageUrl} alt="Preview" className="mt-2 h-28 w-28 rounded-lg object-cover" />
+        <label className="mb-1 block text-sm font-bold text-brandBrown">Foto Produk</label>
+
+        <div className="flex flex-wrap items-center gap-4">
+          {form.imageUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={form.imageUrl} alt="Preview" className="h-24 w-24 rounded-lg object-cover shadow-card" />
+          )}
+
+          <label className="btn-secondary cursor-pointer !py-2.5 text-sm">
+            {uploading ? 'Mengunggah...' : form.imageUrl ? 'Ganti Foto' : '📷 Pilih Foto dari HP/Komputer'}
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              onChange={handleFileChange}
+              disabled={uploading}
+              className="hidden"
+            />
+          </label>
+
+          {form.imageUrl && (
+            <button
+              type="button"
+              onClick={() => update('imageUrl', '')}
+              className="text-xs font-bold text-brandRed hover:underline"
+            >
+              Hapus Foto
+            </button>
+          )}
+        </div>
+
+        {uploadError && <p className="mt-2 text-sm font-semibold text-brandRed">{uploadError}</p>}
+
+        <button
+          type="button"
+          onClick={() => setShowUrlField((v) => !v)}
+          className="mt-2 text-xs font-semibold text-brandBrown/50 hover:text-brandBrown"
+        >
+          {showUrlField ? '▲ Sembunyikan tempel URL manual' : '▾ Atau, tempel URL gambar secara manual'}
+        </button>
+
+        {showUrlField && (
+          <input
+            className="input-field mt-2"
+            placeholder="https://..."
+            value={form.imageUrl}
+            onChange={(e) => update('imageUrl', e.target.value)}
+          />
         )}
       </div>
 
@@ -169,7 +232,7 @@ export default function ProductForm({ initialProduct }) {
       </label>
 
       <div className="flex gap-3">
-        <button type="submit" disabled={saving} className="btn-primary disabled:opacity-60">
+        <button type="submit" disabled={saving || uploading} className="btn-primary disabled:opacity-60">
           {saving ? 'Menyimpan...' : isEdit ? 'Simpan Perubahan' : 'Tambah Produk'}
         </button>
         <button type="button" onClick={() => router.push('/admin/products')} className="btn-secondary">

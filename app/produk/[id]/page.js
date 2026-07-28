@@ -7,6 +7,8 @@ import { getProduct } from '@/lib/products';
 import { getCategory } from '@/lib/categories';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
 
 const formatIDR = (n) =>
   new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n || 0);

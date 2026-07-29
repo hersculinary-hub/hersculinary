@@ -7,12 +7,18 @@ export const runtime = 'nodejs';
 const MAX_SIZE_BYTES = 8 * 1024 * 1024; // 8MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
+// The Blob store in this project was connected with a custom environment
+// variable prefix ("FOTOPRODUK") instead of the default "BLOB" prefix, so the
+// token env var is named FOTOPRODUK_READ_WRITE_TOKEN. We fall back to the
+// default name too, in case someone reconnects it later without a prefix.
+const BLOB_TOKEN = process.env.FOTOPRODUK_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN;
+
 export async function POST(request) {
   if (!(await requireApiSession())) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+  if (!BLOB_TOKEN) {
     return NextResponse.json(
       {
         error:
@@ -43,7 +49,8 @@ export async function POST(request) {
   try {
     const blob = await put(key, file, {
       access: 'public',
-      addRandomSuffix: true
+      addRandomSuffix: true,
+      token: BLOB_TOKEN
     });
     return NextResponse.json({ url: blob.url });
   } catch (e) {

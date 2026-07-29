@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import ShareButtons from './ShareButtons';
+import { ADMIN_WHATSAPP_NUMBER } from '@/lib/config';
 
 const formatIDR = (n) =>
   new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n || 0);
@@ -42,7 +43,7 @@ export default function ProductCard({ product, categoryName }) {
         <p className="mt-1 font-display text-xl text-brandRed">{formatIDR(product.price)}</p>
 
         <a
-          href={`https://wa.me/?text=${waMessage}`}
+          href={`https://wa.me/${ADMIN_WHATSAPP_NUMBER}?text=${waMessage}`}
           target="_blank"
           rel="noopener noreferrer"
           className="btn-primary mt-3 !py-2 text-sm"

@@ -5,6 +5,7 @@ import Footer from '@/components/Footer';
 import ShareButtons from '@/components/ShareButtons';
 import { getProduct } from '@/lib/products';
 import { getCategory } from '@/lib/categories';
+import { ADMIN_WHATSAPP_NUMBER } from '@/lib/config';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -69,7 +70,7 @@ export default async function ProductDetailPage({ params }) {
             <p className="text-sm text-brandBrown/50">Stok tersedia: {product.stock}</p>
 
             <div className="mt-4 flex flex-wrap items-center gap-3">
-              <a href={`https://wa.me/?text=${waMessage}`} target="_blank" rel="noopener noreferrer" className="btn-primary">
+              <a href={`https://wa.me/${ADMIN_WHATSAPP_NUMBER}?text=${waMessage}`} target="_blank" rel="noopener noreferrer" className="btn-primary">
                 Pesan via WhatsApp
               </a>
               <ShareButtons productId={product.id} productName={product.name} price={product.price} />

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import AdminShell from '@/components/AdminShell';
+import PosShell from '@/components/PosShell';   // ganti dari AdminShell
 import { generateInvoicePdf } from '@/lib/pdfInvoice';
 
 const formatIDR = (n) =>

@@ -98,7 +98,7 @@ export default function PosPage() {
   }
 
   return (
-    <AdminShell title="Kasir (POS)">
+    <PosShell title="Kasir (POS)">
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <input
@@ -235,6 +235,6 @@ export default function PosPage() {
           )}
         </div>
       </div>
-    </AdminShell>
+    </PosShell>
   );
 }

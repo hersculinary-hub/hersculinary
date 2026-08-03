@@ -18,9 +18,6 @@ export default function PosShell({ children, title }) {
           HerS <span className="text-brandGold">Kasir</span>
         </span>
         <div className="flex items-center gap-3">
-          <Link href="/admin/products" className="text-sm font-bold text-white/85 hover:underline">
-            ⚙️ Admin
-          </Link>
           <button onClick={handleLogout} className="text-sm font-bold text-white/85 hover:underline">
             🚪 Keluar
           </button>

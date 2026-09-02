@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { isSessionValid, SESSION_COOKIE_NAME } from './lib/auth';
 
 export const config = {
-  matcher: ['/admin/:path*', '/pos/:path*']
+  matcher: ['/admin/:path*', '/pos/:path*', '/laporan/:path*']
 };
 
 export async function middleware(request) {

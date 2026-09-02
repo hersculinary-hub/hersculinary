@@ -6,7 +6,9 @@ import { usePathname, useRouter } from 'next/navigation';
 const NAV_ITEMS = [
   { href: '/admin/products', label: 'Produk', icon: '🍱' },
   { href: '/admin/categories', label: 'Kategori', icon: '🗂️' },
-    { href: '/', label: 'Lihat Katalog', icon: '🌐' }
+  { href: '/pos', label: 'Kasir (POS)', icon: '🧾' },
+  { href: '/laporan', label: 'Laporan Keuangan', icon: '📊' },
+  { href: '/', label: 'Lihat Katalog', icon: '🌐' }
 ];
 
 export default function AdminShell({ children, title }) {

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ShareButtons from '@/components/ShareButtons';
+import ProductGallery from '@/components/ProductGallery';
 import { getProduct } from '@/lib/products';
 import { getCategory } from '@/lib/categories';
 import { ADMIN_WHATSAPP_NUMBER } from '@/lib/config';
@@ -48,14 +49,7 @@ export default async function ProductDetailPage({ params }) {
         </Link>
 
         <div className="mt-4 grid gap-8 md:grid-cols-2">
-          <div className="aspect-square overflow-hidden rounded-2xl bg-creamDeep shadow-card">
-            {product.imageUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={product.imageUrl} alt={product.name} className="h-full w-full object-cover" />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center text-6xl">🍽️</div>
-            )}
-          </div>
+          <ProductGallery images={product.images?.length ? product.images : product.imageUrl ? [product.imageUrl] : []} alt={product.name} />
 
           <div className="flex flex-col gap-3">
             <div className="flex flex-wrap gap-2">

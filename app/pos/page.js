@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import PosShell from '@/components/PosShell';   // ganti dari AdminShell
+import AdminShell from '@/components/AdminShell';
 import { generateInvoicePdf } from '@/lib/pdfInvoice';
 
 const formatIDR = (n) =>
@@ -74,7 +74,7 @@ export default function PosPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          items: cart.map((i) => ({ productName: i.name, price: i.price, qty: i.qty })),
+          items: cart.map((i) => ({ productId: i.productId, productName: i.name, price: i.price, qty: i.qty })),
           discount: Number(discount) || 0,
           customerName,
           customerPhone,
@@ -98,7 +98,7 @@ export default function PosPage() {
   }
 
   return (
-    <PosShell title="Kasir (POS)">
+    <AdminShell title="Kasir (POS)">
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <input
@@ -235,6 +235,6 @@ export default function PosPage() {
           )}
         </div>
       </div>
-    </PosShell>
+    </AdminShell>
   );
 }

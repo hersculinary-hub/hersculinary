@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { listProducts, createProduct } from '@/lib/products';
+import { listProducts, createProduct, sanitizePublicProduct } from '@/lib/products';
 import { requireApiSession } from '@/lib/auth-server';
 
 export const dynamic = 'force-dynamic';
@@ -8,7 +8,12 @@ export const fetchCache = 'force-no-store';
 
 export async function GET() {
   const products = await listProducts();
-  return NextResponse.json({ products }, { headers: { 'Cache-Control': 'no-store' } });
+  // This endpoint has no login requirement (the public katalog machinery
+  // relies on it indirectly via admin/POS pages too), so only include
+  // harga vendor / nama vendor when the caller has a valid admin session.
+  const isAdmin = await requireApiSession();
+  const output = isAdmin ? products : products.map(sanitizePublicProduct);
+  return NextResponse.json({ products: output }, { headers: { 'Cache-Control': 'no-store' } });
 }
 
 export async function POST(request) {

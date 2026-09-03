@@ -6,19 +6,24 @@ export const config = {
   matcher: ['/admin/:path*', '/pos/:path*', '/laporan/:path*']
 };
 
+function areaForPath(pathname) {
+  if (pathname.startsWith('/admin')) return 'admin';
+  if (pathname.startsWith('/pos')) return 'pos';
+  if (pathname.startsWith('/laporan')) return 'laporan';
+  return null;
+}
+
 export async function middleware(request) {
   const { pathname } = request.nextUrl;
-
-  // Login page itself must stay reachable
-  if (pathname === '/admin/login') {
-    return NextResponse.next();
-  }
+  const area = areaForPath(pathname);
+  if (!area) return NextResponse.next();
 
   const cookie = request.cookies.get(SESSION_COOKIE_NAME)?.value;
-  const valid = await isSessionValid(cookie);
+  const valid = await isSessionValid(cookie, area);
 
   if (!valid) {
-    const loginUrl = new URL('/admin/login', request.url);
+    const loginUrl = new URL('/login', request.url);
+    loginUrl.searchParams.set('area', area);
     loginUrl.searchParams.set('next', pathname);
     return NextResponse.redirect(loginUrl);
   }

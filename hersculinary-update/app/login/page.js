@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 const AREA_LABELS = {
   admin: 'Admin',
@@ -16,7 +16,6 @@ const AREA_DEFAULT_PATH = {
 };
 
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   const areaParam = searchParams.get('area');
@@ -45,8 +44,7 @@ function LoginForm() {
         return;
       }
       const next = searchParams.get('next') || AREA_DEFAULT_PATH[area];
-      router.push(next);
-      router.refresh();
+      window.location.href = next;
     } catch {
       setError('Terjadi kesalahan jaringan.');
       setLoading(false);

@@ -1,7 +1,6 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 const NAV_ITEMS = [
   { href: '/admin/products', label: 'Produk', icon: '🍱' },
@@ -24,23 +23,36 @@ const AREA_LABELS = {
   laporan: 'Laporan'
 };
 
+// Menu antar-area sengaja pakai <a> biasa (bukan next/link) supaya SETIAP
+// klik memicu permintaan penuh ke server dan wajib lewat middleware.js lagi.
+// Kalau pakai next/link, Next.js kadang menampilkan halaman dari cache
+// navigasi di browser tanpa mengecek ulang ke server -- itu sebabnya Kasir /
+// Laporan Keuangan bisa "kebuka" tanpa diminta password lagi.
+function NavLink({ href, icon, label, active, className }) {
+  return (
+    <a href={href} className={className}>
+      <span className="mr-2">{icon}</span>
+      {label}
+    </a>
+  );
+}
+
 export default function AdminShell({ children, title }) {
   const pathname = usePathname();
-  const router = useRouter();
   const area = areaForPath(pathname);
 
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' });
-    router.push(`/login?area=${area}`);
-    router.refresh();
+    // Full navigation juga di sini, untuk alasan yang sama seperti di atas.
+    window.location.href = `/login?area=${area}`;
   }
 
   return (
     <div className="min-h-screen bg-cream md:flex">
       <aside className="sticky top-0 z-30 flex items-center justify-between bg-brandRedDark px-4 py-3 text-white md:h-screen md:w-60 md:flex-col md:items-stretch md:justify-start md:py-6">
-        <Link href="/admin/products" className="font-display text-2xl">
+        <a href="/admin/products" className="font-display text-2xl">
           HerS <span className="text-brandGold">Admin</span>
-        </Link>
+        </a>
 
         <p className="hidden text-[11px] font-bold uppercase tracking-widest text-white/50 md:mt-4 md:block">
           Buka menu lain = keluar dari {AREA_LABELS[area]}
@@ -48,16 +60,15 @@ export default function AdminShell({ children, title }) {
 
         <nav className="hidden gap-1 md:mt-3 md:flex md:flex-1 md:flex-col">
           {NAV_ITEMS.map((item) => (
-            <Link
+            <NavLink
               key={item.href}
               href={item.href}
+              icon={item.icon}
+              label={item.label}
               className={`rounded-lg px-3 py-2.5 text-sm font-bold transition ${
                 pathname === item.href ? 'bg-white text-brandRedDark' : 'text-white/85 hover:bg-white/10'
               }`}
-            >
-              <span className="mr-2">{item.icon}</span>
-              {item.label}
-            </Link>
+            />
           ))}
         </nav>
 
@@ -76,15 +87,15 @@ export default function AdminShell({ children, title }) {
       <div className="flex-1">
         <div className="flex gap-1 overflow-x-auto border-b border-brandBrown/10 bg-white px-2 py-2 md:hidden">
           {NAV_ITEMS.map((item) => (
-            <Link
+            <NavLink
               key={item.href}
               href={item.href}
+              icon={item.icon}
+              label={item.label}
               className={`whitespace-nowrap rounded-lg px-3 py-2 text-xs font-bold ${
                 pathname === item.href ? 'bg-brandRed text-white' : 'text-brandBrown/70'
               }`}
-            >
-              {item.icon} {item.label}
-            </Link>
+            />
           ))}
         </div>
 
